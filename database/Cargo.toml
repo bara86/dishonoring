@@ -1,0 +1,8 @@
+[package]
+name = "database"
+version = "0.1.0"
+authors = ["Matteo Baracani <bara@develer.com>"]
+
+[dependencies]
+diesel = { version = "1", features = ["sqlite"] }
+dotenv = "0.10"
