@@ -8,7 +8,7 @@ extern crate serde_json;
 extern crate failure;
 
 extern crate actix_web;
-use actix_web::{server, App, HttpRequest, Responder, Path, http, HttpResponse, Json, Result, error};
+use actix_web::{server, App, http, HttpResponse, Json, Result, error};
 
 #[derive(Deserialize)]
 struct Player {
@@ -27,14 +27,6 @@ impl error::ResponseError for MyError {
     fn error_response(&self) -> HttpResponse {
         HttpResponse::Conflict().body(self.name)
     }
-}
-
-fn index(_req: HttpRequest) -> impl Responder {
-    "Hello from the index page"
-}
-
-fn hello(path: Path<String>) -> impl Responder {
-    format!("Hello {}!", *path)
 }
 
 fn add_player(player_info: Json<Player>) -> Result<String, MyError> {
@@ -57,8 +49,6 @@ fn add_player(player_info: Json<Player>) -> Result<String, MyError> {
 fn main() {
     server::new(|| {
         App::new()
-            .resource("/", |r| r.method(http::Method::GET).with(index))
-            .resource("/hello/{name}", |r| r.method(http::Method::GET).with(hello))
             .resource("/add_player", |r| r.method(http::Method::POST).with(add_player))
     })
         .bind("127.0.0.1:8000")
