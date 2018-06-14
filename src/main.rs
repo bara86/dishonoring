@@ -13,6 +13,8 @@ use actix_web::{server, App, HttpRequest, Responder, Path, http, HttpResponse, J
 #[derive(Deserialize)]
 struct Player {
     nickname: String,
+    name: String,
+    lastname: String,
 }
 
 #[derive(Fail, Debug)]
@@ -41,7 +43,14 @@ fn add_player(player_info: Json<Player>) -> Result<String, MyError> {
     if let Some(_) = database::find_player(&connection, &player_info.nickname) {
         return Err(MyError{name: "Already exists"});
     }
-    database::create_player(&connection, &player_info.nickname);
+
+    let new_player = database::models::Player {
+        nickname: player_info.nickname.clone(),
+        name: player_info.name.clone(),
+        lastname: player_info.lastname.clone(),
+    };
+
+    database::create_player(&connection, &new_player);
     Ok(String::from("Player added"))
 }
 

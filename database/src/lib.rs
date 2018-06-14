@@ -1,8 +1,9 @@
-#[macro_use] extern crate diesel;
-extern crate dotenv;
+pub mod models;
 
 mod schema;
-mod models;
+
+#[macro_use] extern crate diesel;
+extern crate dotenv;
 
 use diesel::prelude::*;
 use diesel::sqlite::SqliteConnection;
@@ -19,15 +20,11 @@ pub fn establish_connection() -> SqliteConnection {
         .expect(&format!("Error connecting to {}", database_url))
 }
 
-pub fn create_player<'a>(conn: &SqliteConnection, nickname: &'a str) -> usize {
+pub fn create_player<'a>(conn: &SqliteConnection, new_player: &Player) -> usize {
     use schema::players;
 
-    let new_player = Player {
-        nickname: nickname.to_string(),
-    };
-
     diesel::insert_into(players::table)
-        .values(&new_player)
+        .values(new_player)
         .execute(conn)
         .expect("Error saving new player")
 }

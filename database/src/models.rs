@@ -4,6 +4,8 @@ use schema::players;
 #[table_name="players"]
 pub struct Player {
     pub nickname: String,
+    pub name: String,
+    pub lastname: String,
 }
 
 // #[derive(Insertable)]
